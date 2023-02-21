@@ -1,0 +1,20 @@
+//right max element is maintained;
+//if current element is greater than right max then obviously it will be greater than all other right elements
+
+class Solution{
+    //Function to find the leaders in the array.
+    public:
+    vector<int> leaders(int a[], int n){
+        // Code here
+        vector<int> ans;
+        int Rmax = INT_MIN;
+        for(int i=n-1; i>=0; i--){
+            if(a[i] >= Rmax){
+                Rmax = a[i];
+                ans.push_back(a[i]);
+            }
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};

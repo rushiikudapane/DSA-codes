@@ -1,0 +1,49 @@
+using two binary searches;
+1st binary search finds the first element in left side if target is found instead of returning bcoz it may not be first
+1st binary search finds the last element in right side if target is found instead of returning bcoz it may not be last
+
+
+
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> ans;
+        int low = 0;
+        int high = nums.size()-1;
+        int res = -1;
+
+        while(low <= high){
+            int mid = (low + high) / 2;
+            if(target == nums[mid]){
+                res = mid;
+                high = mid - 1;
+            }
+            else if(target > nums[mid]){
+                low = mid + 1;
+            }
+            else high = mid - 1;
+        }
+
+        ans.push_back(res);
+
+        low = 0;
+        high = nums.size()-1;
+        res = -1;
+
+        while(low <= high){
+            int mid = (low + high) / 2;
+            if(target == nums[mid]){
+                res = mid;
+                low = mid + 1;
+            }
+            else if(target > nums[mid]){
+                low = mid + 1;
+            }
+            else high = mid - 1;
+        }
+
+        ans.push_back(res);
+
+        return ans;
+    }
+};
