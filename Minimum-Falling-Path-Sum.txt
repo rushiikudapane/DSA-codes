@@ -1,0 +1,63 @@
+approach 1: memoization
+TC = O(N*M) SC = O(N)stack space + O(N+M)dp array
+
+int solve(int i, int j, vector<vector<int>>& matrix, vector<vector<int>>& dp){
+        if(j<0 || j>=matrix[0].size()) return 1e9;
+        if(i == 0) return matrix[0][j];
+
+        if(dp[i][j] != -1) return dp[i][j];
+        int up = matrix[i][j] + solve(i-1, j, matrix, dp);
+        int dl = matrix[i][j] + solve(i-1, j-1, matrix, dp);
+        int dr = matrix[i][j] + solve(i-1, j+1, matrix, dp);
+
+        return dp[i][j] = min(up, min(dl, dr));
+
+    }
+
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+
+        int mani = 1e9;
+        for(int i=0; i<m; i++){
+            mani = min(mani, solve(n-1, i, matrix, dp));
+        }
+
+        return mani;
+    }
+
+
+approch 2: Tabulation Bottom up
+TC = O(M*N)+O(2M) SC = O(M*N) dp array and no stack space  
+
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+         vector<vector<int>> dp(n, vector<int> (m, 0));
+
+    for(int j=0; j<m; j++) dp[0][j] = matrix[0][j];
+
+    for(int i=1; i<n; i++)
+    {
+        for(int j=0; j<m; j++)
+        {
+            int u = matrix[i][j] + dp[i-1][j];
+            int ld = matrix[i][j], rd = matrix[i][j];
+
+            if(j-1>=0) ld += dp[i-1][j-1];
+            else ld += 1e8;
+
+            if(j+1<n) rd += dp[i-1][j+1];
+            else rd += 1e8;
+
+            dp[i][j] = min(u, min(ld, rd));
+        }
+    }
+
+    int mini=1e8;
+    for(int j=0; j<m; j++)
+        mini = min(mini, dp[m-1][j]);
+    return mini;
+
+    }
