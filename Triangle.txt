@@ -1,0 +1,28 @@
+approach 1: memoization
+TC = O(N*N) SC = O(N)stack space + O(N*N)dp array
+
+    int solve(int i, int j, vector<vector<int>>& triangle, vector<vector<int>>& dp){
+        if(j < 0 || j >= triangle[i].size()) return 1e9;
+        if(i == 0) return triangle[0][0];
+
+
+        if(dp[i][j] != -1) return dp[i][j];
+        int up = triangle[i][j] + solve(i-1, j, triangle, dp);
+        int diagonal = triangle[i][j] + solve(i-1, j-1, triangle, dp);
+
+        return dp[i][j] = min(up, diagonal);
+    }
+
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int n = triangle.size();
+        int m = triangle[n-1].size();
+
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+
+        int mini = 1e9;
+        for(int j=0; j<m; j++){
+            mini = min(mini, solve(n-1, j, triangle, dp));
+        }
+
+        return mini;
+    }
