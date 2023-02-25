@@ -1,0 +1,29 @@
+approach memoization:
+TC = O(N) SC = O(N) stack space + O(N*SUM/2);
+
+        if(target == 0) return true;
+        if(target < 0 || ind >= nums.size()) return false;
+
+        if(dp[ind][target] != -1) return dp[ind][target];
+        bool left = false;
+        if(target >= nums[ind]) left = solve(ind+1, target-nums[ind], nums, dp);
+
+        bool right = solve(ind+1, target, nums, dp);
+
+        return dp[ind][target] = left || right;
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for(int i=0; i<nums.size(); i++){
+            sum += nums[i];
+        }
+
+        if(sum % 2 != 0) return false;
+
+        int target = sum/2;
+
+        vector<vector<int>> dp(nums.size(), vector<int>(target+1, -1));
+
+        return solve(0, target, nums, dp);
+    }
