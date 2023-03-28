@@ -1,0 +1,75 @@
+approach 1:
+TC = O(N)traversal * O(N)height SC=O(N)recursion + O(N)traversal
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int solve(TreeNode *root, int height){
+        if(root == NULL) return height;
+
+        int left = solve(root -> left, height+1);
+        int right = solve(root -> right, height+1);
+
+        return max(left, right);
+    }
+
+
+    bool check(TreeNode* root){
+        if(abs(solve(root->left, 0) - solve(root->right, 0)) == 0 || abs(solve(root->left, 0) - solve(root->right, 0)) == 1) return true;
+        return false;
+    }
+
+    bool isBalanced(TreeNode* root) {
+        if(root == NULL) return true;
+        stack<TreeNode*> st;
+        st.push(root);
+        while(!st.empty()){
+            TreeNode* tempNode = st.top();
+            if(!check(tempNode)) return false;
+            st.pop();
+            if(tempNode -> left != NULL){
+                st.push(tempNode -> left);
+            }
+            if(tempNode -> right != NULL){
+                st.push(tempNode -> right);
+            }
+        }
+
+        return true;
+    }
+};
+
+
+approach 2: TC = O(N)traversal SC=O(N)
+
+class Solution {
+public:
+
+    int solve(TreeNode* root){
+        if(root == NULL) return 0;
+
+        int left = solve(root -> left);
+        if(left == -1) return -1;
+        int right = solve(root -> right);
+        if(right == -1) return -1;
+
+        if(abs(left - right) > 1) return -1;
+
+        return max(left, right) + 1;
+    }
+
+    bool isBalanced(TreeNode* root) {
+        if(solve(root) == -1) return false;
+        return true;
+    }
+};
