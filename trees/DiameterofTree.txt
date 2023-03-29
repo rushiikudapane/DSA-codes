@@ -1,0 +1,92 @@
+approach 1: BruteForce
+
+TC= O(N)*O(N) SC = O(N)
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int solve(TreeNode* root, int height){
+        if(root == NULL) return height;
+
+        int left = solve(root -> left, height + 1);
+        int right = solve(root -> right, height + 1);
+
+        return max(left , right);
+    }
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        stack<TreeNode*>st;
+        vector<int> v;
+
+        st.push(root);
+
+        while(!st.empty()){
+            TreeNode* temp = st.top();
+            st.pop();
+            int leftSub = solve(temp->left, 0);
+            int rightSub = solve(temp->right, 0);
+
+            v.push_back(leftSub + rightSub);
+
+            if(temp -> left != NULL){
+                st.push(temp -> left);
+            }
+            if(temp -> right != NULL){
+                st.push(temp -> right);
+            }
+        }
+        int max = 0;
+        for(int i=0; i<v.size(); i++){
+            if(v[i] > max) max = v[i];
+        }
+        return max;
+    }
+};
+
+
+approach 2: TC = O(N), SC = O(N)
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int solve(TreeNode* root, int& diameter){
+        if(root == NULL) return 0;
+
+        int left = solve(root -> left, diameter);
+        int right = solve(root -> right, diameter);
+
+        diameter = max(diameter, (left+right));
+
+        return 1 + max(left , right); 
+    }
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        int diameter = 0;
+        solve(root, diameter);
+
+        return diameter;
+    }
+};
+
+
+
