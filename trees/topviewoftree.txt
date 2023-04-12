@@ -1,0 +1,84 @@
+approach 1 my own approach : TC = O(N + NlogN) + SC = O(N)
+
+class Solution
+{
+    public:
+    //Function to return a list of nodes visible from the top view 
+    //from left to right in Binary Tree.
+    void indexes(Node* root, int i, int j, vector<pair<int,int>>& mp, map<pair<int, int>, int>& map){
+        if(root == NULL) return;
+        
+        indexes(root -> left, i-1, j+1, mp, map);
+        mp.push_back(make_pair(i, j));
+        map[make_pair(i, j)] = root -> data;
+        indexes(root -> right, i+1, j+1, mp, map);
+        
+        return;
+    }
+    
+    vector<int> topView(Node *root)
+    {
+        //Your code here
+        vector<int> ans;
+        vector<pair<int, int>> mp;
+        map<pair<int, int>, int> map;
+        
+        indexes(root, 0, 0, mp, map);
+        
+        sort(mp.begin(), mp.end());
+        
+        int temp = INT_MIN;
+        for(int i=0; i<mp.size(); i++){
+            if(temp != mp[i].first){
+                ans.push_back(map[mp[i]]);
+                temp = mp[i].first;
+            }
+        }
+        
+        // for(int i=0; i<ans.size(); i++){
+        //     cout << ans[i] << endl;
+        // }
+        
+        
+        return ans;
+    }
+
+};
+
+approach 2: TC = O(N) SC = O(N)
+
+class Solution
+{
+    public:
+    //Function to return a list of nodes visible from the top view 
+    //from left to right in Binary Tree.
+    vector<int> topView(Node *root)
+    {
+        //Your code here
+        vector<int> ans;
+        if(root == NULL) return ans;
+        
+        map<int, int> map;
+        queue<pair<Node*, int>> q;
+        
+        q.push({root, 0});
+        
+        while(!q.empty()){
+            auto it = q.front();
+            q.pop();
+            Node* node = it.first;
+            int line = it.second;
+            if(map.find(line) == map.end()) map[line] = node -> data;
+            
+            if(node -> left != NULL) q.push({node->left, line-1});
+            if(node -> right != NULL) q.push({node->right, line+1});
+            
+        }
+        
+        for(auto it : map){
+            ans.push_back(it.second);
+        }
+        return ans;
+    }
+
+};
